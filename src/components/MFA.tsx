@@ -109,7 +109,7 @@ export const MFA = () => {
             onChange={handleBackupCodeChange(index)}
             disabled={index !== 0 || backupCode.join("").length > 0}
             onPaste={index === 0 ? handleBackupCodePaste : undefined}
-            style={{ width: "70px", textAlign: "center", margin: "0 5px" }}
+            style={{ width: "60px", textAlign: "center", margin: "0 5px" }}
             maxLength={4}
           />
         ))}
