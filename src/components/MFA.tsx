@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   TextInput,
   Box,
@@ -10,6 +10,8 @@ import {
   Tooltip,
   rem,
   Group,
+  Space,
+  PinInput,
 } from "@mantine/core";
 import { IconCopy, IconCheck, IconEraser } from "@tabler/icons-react";
 import { generateAuthCode } from "@/lib/authcode";
@@ -20,6 +22,7 @@ export const MFA = () => {
   const [authCode, setAuthCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [timeLeft, setTimeLeft] = useState(30);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(8).fill(null));
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -49,6 +52,7 @@ export const MFA = () => {
       (error) => {
         setAuthCode("");
         setTimeLeft(0);
+        clearBackupCode();
         setErrorMessage(error.message);
       }
     );
@@ -68,22 +72,15 @@ export const MFA = () => {
     e.preventDefault();
   };
 
-  const handleBackupCodeChange =
-    (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      const newBackupCode = [...backupCode];
-      newBackupCode[index] = value;
-      setBackupCode(newBackupCode);
-      if (newBackupCode.join("").length === 32) {
-        handleAuthCode(newBackupCode.join(""));
-      }
-    };
-
   const clearBackupCode = () => {
     setBackupCode(Array(8).fill(""));
     setAuthCode("");
     setErrorMessage("");
     setTimeLeft(30);
+  };
+
+  const handleFocus = () => {
+    inputRefs.current[0]?.focus();
   };
 
   return (
@@ -106,19 +103,27 @@ export const MFA = () => {
           <TextInput
             key={index}
             value={code}
-            onChange={handleBackupCodeChange(index)}
-            disabled={index !== 0 || backupCode.join("").length > 0}
-            onPaste={index === 0 ? handleBackupCodePaste : undefined}
-            style={{ width: "60px", textAlign: "center", margin: "0 5px" }}
+            onPaste={handleBackupCodePaste}
+            onFocus={handleFocus}
+            style={{
+              width: "60px",
+              textAlign: "center",
+              margin: "0 5px",
+            }}
+            ref={(ref) => {
+              inputRefs.current[index] = ref;
+            }}
             maxLength={4}
+            readOnly
           />
         ))}
-        <Tooltip label="Clear All" withArrow position="right">
-          <ActionIcon color="red" variant="subtle" onClick={clearBackupCode}>
-            <IconEraser style={{ width: rem(16) }} />
-          </ActionIcon>
-        </Tooltip>
       </Group>
+      <Space h="md" />
+      <Tooltip label="Clear All" withArrow position="right">
+        <ActionIcon onClick={clearBackupCode} variant="subtle" color="gray">
+          <IconEraser style={{ width: rem(16) }} />
+        </ActionIcon>
+      </Tooltip>
       {authCode && (
         <Box mt="20px">
           <Group>
