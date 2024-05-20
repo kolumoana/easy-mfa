@@ -49,9 +49,9 @@ export const Layout = () => {
             onPaste={(e) => handleBackupCodePaste(e)}
             onFocus={handleFocus}
             style={{
-              width: "60px",
+              width: "65px",
               textAlign: "center",
-              margin: "0 5px",
+              margin: "0",
             }}
             ref={(ref) => {
               inputRefs.current[index] = ref;
