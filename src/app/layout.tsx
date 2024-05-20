@@ -22,7 +22,7 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <html lang="en">
+    <html lang="en" style={{ backgroundColor: "#fff" }}>
       <body>
         <MantineProvider>{children}</MantineProvider>
       </body>
