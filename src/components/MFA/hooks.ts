@@ -4,7 +4,7 @@ import { useState, useEffect, ClipboardEvent, useRef } from "react";
 import { generateAuthCode } from "@/lib/authcode";
 import { Result } from "neverthrow";
 
-export const useAuthCode = () => {
+export const useMFA = () => {
   const [authCode, setAuthCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [timeLeft, setTimeLeft] = useState(30);
@@ -52,12 +52,7 @@ export const useAuthCode = () => {
     setTimeLeft(30);
   };
 
-  const handleBackupCodePaste = (
-    e: ClipboardEvent<HTMLInputElement>,
-    backupCode: string[],
-    setBackupCode: (codes: string[]) => void,
-    handleAuthCode: (code: string) => void
-  ) => {
+  const handleBackupCodePaste = (e: ClipboardEvent<HTMLInputElement>) => {
     const pasteData = e.clipboardData.getData("text").replace(/\s/g, "");
     const splitData = pasteData.match(/.{1,4}/g) || [];
     const newBackupCode = [...backupCode];

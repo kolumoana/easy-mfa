@@ -12,7 +12,7 @@ import {
   Space,
 } from "@mantine/core";
 import { IconCopy, IconCheck, IconEraser } from "@tabler/icons-react";
-import { useAuthCode } from "./hooks";
+import { useMFA } from "./hooks";
 
 export const Layout = () => {
   const {
@@ -21,12 +21,10 @@ export const Layout = () => {
     errorMessage,
     timeLeft,
     inputRefs,
-    handleAuthCode,
-    setBackupCode,
     handleFocus,
     clearBackupCode,
     handleBackupCodePaste,
-  } = useAuthCode();
+  } = useMFA();
 
   return (
     <Box
@@ -48,14 +46,7 @@ export const Layout = () => {
           <TextInput
             key={index}
             value={code}
-            onPaste={(e) =>
-              handleBackupCodePaste(
-                e,
-                backupCode,
-                setBackupCode,
-                handleAuthCode
-              )
-            }
+            onPaste={(e) => handleBackupCodePaste(e)}
             onFocus={handleFocus}
             style={{
               width: "60px",
