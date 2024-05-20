@@ -55,7 +55,7 @@ export const Layout = () => {
               inputRefs.current[index] = ref;
             }}
             maxLength={4}
-            readOnly
+            readOnly={index !== 0}
           />
         ))}
       </Group>
